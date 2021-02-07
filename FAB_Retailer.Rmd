@@ -2,29 +2,56 @@
 title: "FAB_Retailer_Analysis"
 author: "Renjing Liu"
 date: "2021/2/4"
-output: html_document
+output: pdf_document2
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-## R Markdown
+#Simulate data set
+```{r}
+library(tidyverse)
+library(scales)
+set.seed(123)
+Table_1<- 
+  tibble(person= c(1:1055),
+         Factor= sample(x= c(1,2,3),
+                        size = 1055,
+                        replace = TRUE,
+                        prob = c(0.612, 0.224,0.164)),
+         Gender= sample(x=c(1,2),
+                        size= 1055,
+                        prob = c(0.2,0.8),
+                        replace = TRUE),
+         Age_Group= sample(x=c(1,2,3),
+                           size=1055,
+                           prob=c(0.65,0.55,0.05),
+                           replace= TRUE))
 
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+Table_1<- Table_1%>%
+  filter(Age_Group %in% c(1,2))
 
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+Table_2<- Table_1%>%
+  count(Factor)%>%
+  mutate(percentage= n/sum(n))
+#Plot 
+p_1<- 
+  ggplot(data = Table_1)+
+  geom_bar(aes(x= factor(Factor),fill=factor(Age_Group)))+
+  theme_minimal()+
+  labs(y= "人数",
+       title = "选择线下零售护肤店时更关注哪些因素")+
+  scale_x_discrete(labels= c(
+    "线下零售体验","柜姐服务及专业度","口碑及知名度"
+  ))+
+  labs(fill= "年龄段")+
+  scale_fill_discrete(labels=c("16~22","22~30"))+
+  theme(axis.title.x = element_blank())
 
-```{r cars}
-summary(cars)
+
+p_1
+
+
+write.csv(Table_1, here::here("Simulation.csv"))
 ```
-
-## Including Plots
-
-You can also embed plots, for example:
-
-```{r pressure, echo=FALSE}
-plot(pressure)
-```
-
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
