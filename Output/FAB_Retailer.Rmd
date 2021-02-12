@@ -67,14 +67,10 @@ p_2<- ggplot(data = Table_2, aes(x="",y= percentage, fill= Factor))+
 
 p_2
   
-Table_1$Factor<- case_when(
-  Table_1$Factor==1 ~"口碑及名气",
-  Table_1$Factor==2 ~"线下零售体验",
-  Table_1$Factor==3 ~"柜姐服务"
-)
 
 
-write.csv(Table_1, here::here("Simulation.csv"))
+
+write.csv(Table_1, here::here("Simulation_1.csv"))
 
 
 
